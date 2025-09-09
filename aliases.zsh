@@ -9,8 +9,8 @@ alias remove="pkg uninstall -y"
 
 # Git shortcuts
 alias gs="git status"
-alias ga="git add"
-alias gc="git commit -m"
+alias ga="git add ."
+alias gc="git commit -m "update dev bannban" "
 alias gp="git push"
 alias gl="git pull"
 alias gco="git checkout"
@@ -35,10 +35,18 @@ alias npmu="pnpm uninstall"
 alias pt="pnpm run start"
 alias pd="pnpm run dev"
 alias pb="pnpm run build"
-alias pf="pnpm run format"
+alias pl="pnpm lint"
+alias pf="pnpm format"
 alias phc="pnpm type-check"
+alias phc="pnpm check"
+
+
+alias pall='pnpm check && pnpm lint && pnpm alias:fix && pnpm alias:check'
+alias pdp="pnpm run deploy"
 alias pck="scripts/check-structure.sh"
 alias pbu="scripts/backup-project.sh"
+# Dev Git/Project Toolkit
+alias devtool="bash ~/tools/dev_git_tool.sh"
 
 # Utility / system
 alias ll="ls -lah"
