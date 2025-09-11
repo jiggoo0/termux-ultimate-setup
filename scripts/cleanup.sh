@@ -1,29 +1,53 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # 🧹 Termux Cleanup Script - Remove temp files & cache
+# Safe and verbose version
 
-set -e
+set -euo pipefail
 
-echo "🧹 Cleaning Termux cache and temporary files..."
+echo "🧹 Starting Termux cleanup..."
 
-# Clear pkg cache
+# -------------------------------
+# 1️⃣ Clear pkg cache
+# -------------------------------
 echo "🔹 Clearing package cache..."
-pkg clean
+if command -v pkg >/dev/null 2>&1; then
+    pkg clean -y
+else
+    echo "⚠️ pkg command not found. Skipping..."
+fi
 
-# Remove Zsh cache
+# -------------------------------
+# 2️⃣ Remove Zsh cache
+# -------------------------------
 echo "🔹 Removing Zsh cache..."
-rm -f ~/.zcompdump*
+for f in ~/.zcompdump*; do
+    [ -e "$f" ] && rm -v "$f"
+done
 
-# Remove npm cache
+# -------------------------------
+# 3️⃣ Remove npm cache
+# -------------------------------
 echo "🔹 Clearing npm cache..."
-npm cache clean --force
+if command -v npm >/dev/null 2>&1; then
+    npm cache clean --force
+else
+    echo "⚠️ npm not installed. Skipping..."
+fi
 
-# Remove Python cache
-echo "🔹 Removing Python __pycache__..."
-find ~/ -type d -name "__pycache__" -exec rm -rf {} +
+# -------------------------------
+# 4️⃣ Remove Python cache
+# -------------------------------
+echo "🔹 Removing Python __pycache__ directories..."
+find ~/ -type d -name "__pycache__" -print -exec rm -rf {} +
 
-# Optional: Remove any log/temp files in home directory
+# -------------------------------
+# 5️⃣ Remove optional temp/log directories
+# -------------------------------
 echo "🔹 Removing temp/log files in ~/tmp and ~/logs if exist..."
-[ -d ~/tmp ] && rm -rf ~/tmp/*
-[ -d ~/logs ] && rm -rf ~/logs/*
+[ -d ~/tmp ] && rm -rv ~/tmp/* || echo "ℹ️ ~/tmp not found, skipping..."
+[ -d ~/logs ] && rm -rv ~/logs/* || echo "ℹ️ ~/logs not found, skipping..."
 
-echo "✅ Cleanup complete!"
+# -------------------------------
+# 6️⃣ Finish
+# -------------------------------
+echo "✅ Termux cleanup complete!"
